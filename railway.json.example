@@ -1,0 +1,50 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "name": "betterpress",
+  "services": [
+    {
+      "name": "web",
+      "source": {
+        "path": ".",
+        "dockerfilePath": "Dockerfile"
+      },
+      "env": {
+        "WORDPRESS_DB_HOST": "${DB_HOST}",
+        "WORDPRESS_DB_USER": "${DB_USER}",
+        "WORDPRESS_DB_PASSWORD": "${DB_PASSWORD}",
+        "WORDPRESS_DB_NAME": "${DB_NAME}",
+        "WORDPRESS_CONFIG_EXTRA": "define('FS_METHOD','direct');"
+      },
+      "ports": [
+        {
+          "port": 8080,
+          "protocol": "TCP"
+        }
+      ],
+      "healthcheck": {
+        "path": "/",
+        "interval": 10,
+        "timeout": 5
+      },
+      "notes": "Attach a Railway Volume to /var/www/html/wp-content via UI/CLI."
+    },
+    {
+      "name": "sftp-optional",
+      "image": "atmoz/sftp:alpine",
+      "env": {
+        "SFTP_USER": "${SFTP_USER}",
+        "SFTP_PASSWORD": "${SFTP_PASSWORD}"
+      },
+      "command": ["/bin/sh","-c","exec /entrypoint ${SFTP_USER}:${SFTP_PASSWORD}:33:33:wp-content"],
+      "ports": [
+        {
+          "port": 22,
+          "protocol": "TCP"
+        }
+      ],
+      "notes": "Mount the same Volume at /home/${SFTP_USER}/wp-content. Railway may not allow public SFTP on a standard web service; use a separate service if required."
+    }
+  ]
+}
+
+

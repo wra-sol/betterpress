@@ -46,4 +46,9 @@ See `.env.example`:
 - Expose the default service port; Railway assigns an external URL.
 - Note: Railway services expose a single public port; running SFTP alongside HTTP on the same service is not supported. If SFTP is required on Railway, create a separate service with an SFTP image and mount the same Volume, or use Railway's file mounts/CLI to manage uploads.
 
+#### Config-as-code
+- A `railway.json.example` is provided to define services from a single repo. Rename to `railway.json` and adjust as needed.
+- The `web` service builds from the provided `Dockerfile` and expects a Volume mounted at `/var/www/html/wp-content`.
+- The `sftp-optional` service is provided as a reference. If you enable it, mount the same Volume to `/home/$SFTP_USER/wp-content` and set `SFTP_USER`/`SFTP_PASSWORD`.
+
 
