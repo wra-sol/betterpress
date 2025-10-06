@@ -26,12 +26,11 @@ services:
     ports:
       - "8080:80"
     environment:
-      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_HOST: "${WORDPRESS_DB_HOST:-db:3306}"
       WORDPRESS_DB_USER: ${DB_USER}
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
       WORDPRESS_DB_NAME: ${DB_NAME}
-      WORDPRESS_CONFIG_EXTRA: |
-        define('FS_METHOD', 'direct');
+      WORDPRESS_CONFIG_EXTRA: "${WORDPRESS_CONFIG_EXTRA:-define('FS_METHOD', 'direct');}"
     volumes:
       - ${WP_CONTENT_DIR:-./data/wp-content}:/var/www/html/wp-content
 
