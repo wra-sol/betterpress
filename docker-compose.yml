@@ -1,27 +1,25 @@
 version: "3.9"
 
 services:
-  db:
-    image: mariadb:10.11
-    restart: unless-stopped
-    environment:
-      MARIADB_DATABASE: ${DB_NAME}
-      MARIADB_USER: ${DB_USER}
-      MARIADB_PASSWORD: ${DB_PASSWORD}
-      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-    volumes:
-      - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+  # db:
+  #   image: mariadb:10.11
+  #   restart: unless-stopped
+  #   environment:
+  #     MARIADB_DATABASE: ${DB_NAME}
+  #     MARIADB_USER: ${DB_USER}
+  #     MARIADB_PASSWORD: ${DB_PASSWORD}
+  #     MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+  #   volumes:
+  #     - db_data:/var/lib/mysql
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
   wordpress:
     image: wordpress:6.6-php8.2-apache
-    depends_on:
-      db:
-        condition: service_healthy
+    # Remove db dependency since using external Railway MySQL
     restart: unless-stopped
     ports:
       - "8080:80"
@@ -45,8 +43,8 @@ services:
     volumes:
       - ${WP_CONTENT_DIR:-./data/wp-content}:/home/${SFTP_USER}/wp-content
 
-volumes:
-  db_data:
+# volumes:
+#   db_data:
   
 
 
